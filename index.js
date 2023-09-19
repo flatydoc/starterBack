@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 
 import userRouter from "./routes/userRouter.js";
+import tasksRouter from "./routes/tasksRouter.js";
 import sequelize from "./db.js";
 import errorMiddleware from "./middlewares/errorMiddleware.js";
 
@@ -21,6 +22,7 @@ app.use(
 app.use(json({ extended: true }));
 app.use(cookieParser());
 app.use("/user", userRouter);
+app.use("/tasks", tasksRouter);
 app.use(errorMiddleware);
 
 const connectToPostgres = async () => {

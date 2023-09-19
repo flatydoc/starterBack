@@ -24,7 +24,11 @@ export default class UserController {
         secure: true,
         maxAge: 30 * 24 * 60 * 60 * 1000,
       });
-      return res.status(201).json({ message: "Пользователь создан", userData });
+      const data = {
+        user: userData.user,
+        accessToken: userData.accessToken,
+      };
+      return res.status(201).json({ message: "Пользователь создан", data });
     } catch (error) {
       next(error);
     }
@@ -33,15 +37,18 @@ export default class UserController {
   async login(req, res, next) {
     try {
       const { email, password } = req.body;
-      const IP = req.headers.host;
-      const userData = await new UserService().login(email, password, IP);
+      const userData = await new UserService().login(email, password);
       res.cookie("token", userData.refreshToken, {
         httpOnly: true,
         sameSite: "none",
         secure: true,
         maxAge: 30 * 24 * 60 * 60 * 1000,
       });
-      return res.status(200).json({ message: "Вход выполнен", userData });
+      const data = {
+        user: userData.user,
+        accessToken: userData.accessToken,
+      };
+      return res.status(200).json({ message: "Вход выполнен", data });
     } catch (error) {
       next(error);
     }

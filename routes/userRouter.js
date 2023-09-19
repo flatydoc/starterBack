@@ -41,7 +41,7 @@ router.get("/activate/:link", async (req, res, next) => {
 router.get("/refresh", async (req, res, next) => {
   return await new UserController().refresh(req, res, next);
 });
-router.get("/users", authMiddleware, async (req, res, next) => {
+router.get("/getUsers", authMiddleware, async (req, res, next) => {
   return await new UserController().getUsers(req, res, next);
 });
 

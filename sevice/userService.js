@@ -33,12 +33,13 @@ export default class UserService {
 
     const userDto = new UserDto(user); // id, email, isActivated
     const tokens = new TokenService().generateTokens({ ...userDto });
+
     await new TokenService().saveToken(userDto.id, tokens.refreshToken);
 
     return { ...tokens, user: userDto };
   }
 
-  async login(email, password, IP) {
+  async login(email, password) {
     const user = await Users.findOne({ where: { email } });
     if (!user) {
       throw ApiError.BadRequest(
@@ -105,7 +106,12 @@ export default class UserService {
   }
 
   async getAllUsers() {
-    const users = await Users.findAll({});
+    const users = await Users.findAll({
+      attributes: { exclude: ["password", "activationLink"] },
+      where: {
+        role: "user",
+      },
+    });
     return users;
   }
 }
