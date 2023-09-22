@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-import Tokens from "../models/Token.js";
+import { Tokens } from "../models/Token.js";
 
 export default class TokenService {
   generateTokens(payload) {

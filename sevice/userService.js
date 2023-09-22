@@ -3,7 +3,7 @@ import { v4 } from "uuid";
 
 import MailService from "./mailService.js";
 import TokenService from "./tokenService.js";
-import Users from "../models/Users.js";
+import { Users } from "../models/Users.js";
 import UserDto from "../dtos/userDto.js";
 import ApiError from "../exceptions/apiErrors.js";
 
@@ -31,7 +31,7 @@ export default class UserService {
       activationLink,
     });
 
-    const userDto = new UserDto(user); // id, email, isActivated
+    const userDto = new UserDto(user); // id, email, isActivated, isAdmin
     const tokens = new TokenService().generateTokens({ ...userDto });
 
     await new TokenService().saveToken(userDto.id, tokens.refreshToken);
@@ -105,13 +105,13 @@ export default class UserService {
     return { ...tokens, user: userDto };
   }
 
-  async getAllUsers() {
-    const users = await Users.findAll({
-      attributes: { exclude: ["password", "activationLink"] },
-      where: {
-        role: "user",
-      },
-    });
-    return users;
-  }
+  // async getAllUsers() {
+  //   const users = await Users.findAll({
+  //     attributes: { exclude: ["password", "activationLink"] },
+  //     where: {
+  //       role: "user",
+  //     },
+  //   });
+  //   return users;
+  // }
 }

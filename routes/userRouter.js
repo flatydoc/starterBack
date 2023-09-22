@@ -38,11 +38,8 @@ router.post("/logout", async (req, res, next) => {
 router.get("/activate/:link", async (req, res, next) => {
   return await new UserController().activate(req, res, next);
 });
-router.get("/refresh", async (req, res, next) => {
-  return await new UserController().refresh(req, res, next);
-});
-router.get("/getUsers", authMiddleware, async (req, res, next) => {
-  return await new UserController().getUsers(req, res, next);
-});
+// router.get("/refresh", async (req, res, next) => {
+//   return await new UserController().refresh(req, res, next);
+// });
 
 export default router;

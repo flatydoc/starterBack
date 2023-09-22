@@ -1,9 +1,9 @@
 import db from "../db.js";
 import { DataTypes } from "sequelize";
-import { Events } from "./Events.js";
+import { Users } from "./Users.js";
 
-export const Users = db.define(
-  "users",
+export const Events = db.define(
+  "events",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -11,40 +11,35 @@ export const Users = db.define(
       primaryKey: true,
       unique: true,
     },
-    name: {
+    title: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      unique: true,
-    },
-    password: {
+    text: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    isActivated: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
+    date: {
+      type: DataTypes.DATE,
+      allowNull: false,
     },
-    isAdmin: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false,
-    },
-    activationLink: {
+    place: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    // subscriptions: {
+    price: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    // subscribers: {
     //   type: DataTypes.ARRAY(DataTypes.INTEGER),
     // },
   },
   {}
 );
 
-// Users.belongsToMany(Events, {
+// Events.belongsToMany(Users, {
 //   through: "subscriptions",
-//   as: "events",
-//   foreignKey: "user_id",
+//   as: "users",
+//   foreignKey: "event_id",
 // });

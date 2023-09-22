@@ -4,8 +4,9 @@ import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 
 import userRouter from "./routes/userRouter.js";
-import tasksRouter from "./routes/tasksRouter.js";
-import sequelize from "./db.js";
+import eventsRouter from "./routes/eventsRouter.js";
+import { connectToPostgres } from "./db.js";
+
 import errorMiddleware from "./middlewares/errorMiddleware.js";
 
 dotenv.config();
@@ -22,17 +23,8 @@ app.use(
 app.use(json({ extended: true }));
 app.use(cookieParser());
 app.use("/user", userRouter);
-app.use("/tasks", tasksRouter);
+app.use("/events", eventsRouter);
 app.use(errorMiddleware);
-
-const connectToPostgres = async () => {
-  try {
-    await sequelize.authenticate();
-    console.log("Connection has been established successfully.");
-  } catch (error) {
-    console.error("Unable to connect to the database:", error);
-  }
-};
 
 const start = async () => {
   try {

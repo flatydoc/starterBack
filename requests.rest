@@ -1,7 +1,7 @@
-POST http://localhost:5000/user/login
+DELETE http://localhost:5000/events/29
 Content-Type: application/json
 
 {
-    "email": "flatydoc@gmail.com",
-    "password": "qwerty"
+
+
 } 

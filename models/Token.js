@@ -1,7 +1,7 @@
-import { DataTypes } from "sequelize";
-
 import db from "../db.js";
-import Users from "./Users.js";
+import { DataTypes } from "sequelize";
+import { Users } from "./Users.js";
+
 export const Tokens = db.define(
   "tokens",
   {
@@ -18,5 +18,3 @@ export const Tokens = db.define(
   },
   {}
 );
-
-export default Tokens;

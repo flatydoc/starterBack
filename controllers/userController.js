@@ -89,13 +89,4 @@ export default class UserController {
     });
     return res.status(200).json(userData);
   }
-
-  async getUsers(req, res, next) {
-    try {
-      const users = await new UserService().getAllUsers();
-      return res.json(users);
-    } catch (error) {
-      next(error);
-    }
-  }
 }
