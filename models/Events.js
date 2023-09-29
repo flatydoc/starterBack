@@ -11,6 +11,10 @@ export const Events = db.define(
       primaryKey: true,
       unique: true,
     },
+    poster: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     title: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -23,6 +27,10 @@ export const Events = db.define(
       type: DataTypes.DATE,
       allowNull: false,
     },
+    time: {
+      type: DataTypes.TIME,
+      allowNull: false,
+    },
     place: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -30,6 +38,15 @@ export const Events = db.define(
     price: {
       type: DataTypes.INTEGER,
       allowNull: false,
+    },
+    tags: {
+      type: DataTypes.ARRAY(DataTypes.STRING),
+    },
+    photos: {
+      type: DataTypes.ARRAY(DataTypes.STRING),
+    },
+    artists: {
+      type: DataTypes.ARRAY(DataTypes.INTEGER),
     },
     // subscribers: {
     //   type: DataTypes.ARRAY(DataTypes.INTEGER),

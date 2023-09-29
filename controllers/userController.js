@@ -87,6 +87,11 @@ export default class UserController {
       secure: true,
       maxAge: 30 * 24 * 60 * 60 * 1000,
     });
-    return res.status(200).json(userData);
+
+    const data = {
+      user: userData.user,
+      accessToken: userData.accessToken,
+    };
+    return res.status(200).json({ data });
   }
 }

@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 
 import userRouter from "./routes/userRouter.js";
 import eventsRouter from "./routes/eventsRouter.js";
+import artistsRouter from "./routes/artistsRouter.js";
 import { connectToPostgres } from "./db.js";
 
 import errorMiddleware from "./middlewares/errorMiddleware.js";
@@ -24,6 +25,7 @@ app.use(json({ extended: true }));
 app.use(cookieParser());
 app.use("/user", userRouter);
 app.use("/events", eventsRouter);
+app.use("/artists", artistsRouter);
 app.use(errorMiddleware);
 
 const start = async () => {

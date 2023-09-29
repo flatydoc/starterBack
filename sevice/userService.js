@@ -104,14 +104,4 @@ export default class UserService {
     await new TokenService().saveToken(userDto.id, tokens.refreshToken);
     return { ...tokens, user: userDto };
   }
-
-  // async getAllUsers() {
-  //   const users = await Users.findAll({
-  //     attributes: { exclude: ["password", "activationLink"] },
-  //     where: {
-  //       role: "user",
-  //     },
-  //   });
-  //   return users;
-  // }
 }

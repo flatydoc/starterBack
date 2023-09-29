@@ -1,13 +1,15 @@
 "use strict";
 
 import EventsService from "../sevice/eventsService.js";
-// import ApiError from "../exceptions/apiErrors.js";
+import ApiError from "../exceptions/apiErrors.js";
 
 export default class EventsController {
   async getAll(req, res, next) {
     try {
       const events = await new EventsService().getAll();
-      return res.json(events);
+      if (!events) {
+        return next(ApiError.NotFound());
+      } else return res.json(events);
     } catch (error) {
       next(error);
     }
@@ -16,7 +18,9 @@ export default class EventsController {
   async get(req, res, next) {
     try {
       const event = await new EventsService().get(req.params.id);
-      return res.json(event);
+      if (!event) {
+        return next(ApiError.NotFound());
+      } else return res.json(event);
     } catch (error) {
       next(error);
     }
@@ -24,9 +28,8 @@ export default class EventsController {
 
   async add(req, res, next) {
     try {
-      console.log(req.user);
       const data = await new EventsService().add(req.body);
-      return res.status(201).json({ message: "Задача создана", data });
+      return res.status(201).json({ message: "Событие создано", data });
     } catch (error) {
       next(error);
     }
@@ -35,7 +38,7 @@ export default class EventsController {
   async edit(req, res, next) {
     try {
       const data = await new EventsService().edit(req.body);
-      return res.status(201).json({ message: "Success", data });
+      return res.status(201).json({ message: "Событие отредактировано", data });
     } catch (error) {
       next(error);
     }
@@ -43,7 +46,7 @@ export default class EventsController {
   async delete(req, res, next) {
     try {
       await new EventsService().delete(req.params.id);
-      return res.status(201).json({ message: "Deleted" });
+      return res.status(201).json({ message: "Событие удалено" });
     } catch (error) {
       next(error);
     }
@@ -55,7 +58,7 @@ export default class EventsController {
         req.body.id,
         req.user.id
       );
-      return res.status(201).json({ message: "Success", data });
+      return res.status(201).json({ message: "Подписка оформлена", data });
     } catch (error) {
       next(error);
     }

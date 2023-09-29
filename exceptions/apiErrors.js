@@ -16,6 +16,10 @@ export default class ApiError extends Error {
     return new ApiError(403, "Недостаточно прав");
   }
 
+  static NotFound() {
+    return new ApiError(404, "Not found");
+  }
+
   static BadRequest(message, errors = []) {
     return new ApiError(400, message, errors);
   }
