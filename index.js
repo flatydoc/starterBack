@@ -7,7 +7,6 @@ import userRouter from "./routes/userRouter.js";
 import eventsRouter from "./routes/eventsRouter.js";
 import artistsRouter from "./routes/artistsRouter.js";
 import { connectToPostgres } from "./db.js";
-
 import errorMiddleware from "./middlewares/errorMiddleware.js";
 
 dotenv.config();

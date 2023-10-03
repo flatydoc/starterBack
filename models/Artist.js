@@ -1,7 +1,7 @@
 import db from "../db.js";
 import { DataTypes } from "sequelize";
 
-export const Artists = db.define(
+const Artist = db.define(
   "artists",
   {
     id: {
@@ -9,6 +9,7 @@ export const Artists = db.define(
       autoIncrement: true,
       primaryKey: true,
       unique: true,
+      allowNull: false,
     },
     name: {
       type: DataTypes.STRING,
@@ -26,3 +27,5 @@ export const Artists = db.define(
   },
   {}
 );
+
+export default Artist;

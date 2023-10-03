@@ -3,13 +3,14 @@ import { v4 } from "uuid";
 
 import MailService from "./mailService.js";
 import TokenService from "./tokenService.js";
-import { Users } from "../models/Users.js";
+import User from "../models/User.js";
+
 import UserDto from "../dtos/userDto.js";
 import ApiError from "../exceptions/apiErrors.js";
 
 export default class UserService {
   async registration(name, email, password) {
-    const isUsed = await Users.findOne({ where: { email } });
+    const isUsed = await User.findOne({ where: { email } });
     if (isUsed) {
       throw ApiError.BadRequest(
         `Пользователь c почтовым адресом ${email} уже существует`
@@ -24,7 +25,7 @@ export default class UserService {
       `${process.env.API_URL}/user/activate/${activationLink}`
     );
 
-    const user = await Users.create({
+    const user = await User.create({
       name,
       email,
       password: hashedPassword,
@@ -40,7 +41,7 @@ export default class UserService {
   }
 
   async login(email, password) {
-    const user = await Users.findOne({ where: { email } });
+    const user = await User.findOne({ where: { email } });
     if (!user) {
       throw ApiError.BadRequest(
         `Пользователь с почтовым адресом ${email} не найден`
@@ -60,13 +61,13 @@ export default class UserService {
   }
 
   async activate(activationLink) {
-    const user = await Users.findOne({ where: { activationLink } });
+    const user = await User.findOne({ where: { activationLink } });
 
     if (!user) {
       throw ApiError.BadRequest("Некорректная ссылка активации");
     }
 
-    await Users.update(
+    await User.update(
       {
         isActivated: true,
       },
@@ -93,7 +94,7 @@ export default class UserService {
     if (!userData || !tokenFromDb) {
       throw ApiError.UnauthorizedError();
     }
-    const user = await Users.findOne({
+    const user = await User.findOne({
       where: {
         id: userData.id,
       },

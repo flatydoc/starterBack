@@ -1,8 +1,9 @@
 import db from "../db.js";
+import Event from "./Event.js";
 import { DataTypes } from "sequelize";
-import { Events } from "./Events.js";
+import UserEvent from "./UserEvent.js";
 
-export const Users = db.define(
+const User = db.define(
   "users",
   {
     id: {
@@ -10,6 +11,7 @@ export const Users = db.define(
       autoIncrement: true,
       primaryKey: true,
       unique: true,
+      allowNull: false,
     },
     name: {
       type: DataTypes.STRING,
@@ -36,15 +38,16 @@ export const Users = db.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    // subscriptions: {
-    //   type: DataTypes.ARRAY(DataTypes.INTEGER),
-    // },
   },
   {}
 );
 
-// Users.belongsToMany(Events, {
-//   through: "subscriptions",
-//   as: "events",
-//   foreignKey: "user_id",
-// });
+User.associations = () => {
+  User.belongsToMany(Event, {
+    through: UserEvent,
+    // as: "user_events",
+    foreignKey: "userId",
+  });
+};
+
+export default User;

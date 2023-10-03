@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-import { Tokens } from "../models/Token.js";
+import Token from "../models/Token.js";
 
 export default class TokenService {
   generateTokens(payload) {
@@ -36,7 +36,7 @@ export default class TokenService {
   }
 
   async saveToken(userId, refreshToken) {
-    const tokenData = await Tokens.findOne({
+    const tokenData = await Token.findOne({
       where: { user: userId },
     });
     if (tokenData) {
@@ -45,20 +45,20 @@ export default class TokenService {
       });
     }
 
-    return await Tokens.create({
+    return await Token.create({
       user: userId,
       refreshToken,
     });
   }
 
   async findToken(refreshToken) {
-    return await Tokens.findOne({
+    return await Token.findOne({
       where: { refreshToken },
     });
   }
 
   async removeToken(refreshToken) {
-    return await Tokens.destroy({
+    return await Token.destroy({
       where: { refreshToken },
     });
   }

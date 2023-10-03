@@ -1,14 +1,17 @@
-import { Events } from "../models/Events.js";
+import Event from "../models/Event.js";
+import User from "../models/User.js";
 // import ApiError from "../exceptions/apiErrors.js";
 
 export default class EventsService {
   async getAll() {
-    const events = await Events.findAll();
+    const events = await Event.findAll({
+      include: User,
+    });
     return events;
   }
 
   async get(id) {
-    const event = await Events.findOne({
+    const event = await Event.findOne({
       where: {
         id,
       },
@@ -28,7 +31,7 @@ export default class EventsService {
     price,
     artists,
   }) {
-    const event = await Events.create({
+    const event = await Event.create({
       title,
       poster,
       text,
@@ -57,7 +60,7 @@ export default class EventsService {
     id,
     artists,
   }) {
-    const event = await Events.update(
+    const event = await Event.update(
       {
         title,
         poster,
@@ -81,7 +84,7 @@ export default class EventsService {
   }
 
   async delete(id) {
-    const event = await Events.destroy({
+    const event = await Event.destroy({
       where: {
         id,
       },
@@ -90,7 +93,5 @@ export default class EventsService {
     return { event };
   }
 
-  async subscribe(eventId, userId) {
-    return console.log(`user ${userId} subscribe on event${eventId}`);
-  }
+  async subscribe(eventId, userId) {}
 }

@@ -1,14 +1,14 @@
 import db from "../db.js";
 import { DataTypes } from "sequelize";
-import { Users } from "./Users.js";
+import User from "./User.js";
 
-export const Tokens = db.define(
+const Token = db.define(
   "tokens",
   {
     user: {
       type: DataTypes.INTEGER,
       references: {
-        model: Users,
+        model: User,
         key: "id",
       },
     },
@@ -18,3 +18,5 @@ export const Tokens = db.define(
   },
   {}
 );
+
+export default Token;

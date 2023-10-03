@@ -1,14 +1,14 @@
-import { Artists } from "../models/Artists.js";
+import Artist from "../models/Artist.js";
 // import ApiError from "../exceptions/apiErrors.js";
 
 export default class ArtistsService {
   async getAll() {
-    const artists = await Artists.findAll();
+    const artists = await Artist.findAll();
     return artists;
   }
 
   async get(id) {
-    const artist = await Artists.findOne({
+    const artist = await Artist.findOne({
       where: {
         id,
       },
@@ -17,7 +17,7 @@ export default class ArtistsService {
   }
 
   async add({ name, city, surname, nickname }) {
-    const artist = await Artists.create({
+    const artist = await Artist.create({
       name,
       city,
       surname,
@@ -28,7 +28,7 @@ export default class ArtistsService {
   }
 
   async edit({ name, city, surname, nickname }) {
-    const artist = await Artists.update(
+    const artist = await Artist.update(
       {
         name,
         city,
@@ -46,7 +46,7 @@ export default class ArtistsService {
   }
 
   async delete(id) {
-    const artist = await Artists.destroy({
+    const artist = await Artist.destroy({
       where: {
         id,
       },
