@@ -15,12 +15,46 @@ export default class EventsController {
     }
   }
 
-  async get(req, res, next) {
+  async getEventsBySearch(req, res, next) {
     try {
-      const event = await new EventsService().get(req.params.id);
+      const search = req.query.q;
+      const events = await new EventsService().getEventsBySearch(search);
+      if (!events) {
+        return next(ApiError.NotFound());
+      } else return res.json(events);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getById(req, res, next) {
+    try {
+      const event = await new EventsService().getById(req.params.id);
       if (!event) {
         return next(ApiError.NotFound());
       } else return res.json(event);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getByTitle(req, res, next) {
+    try {
+      const events = await new EventsService().getByTitle(req.body.title);
+      if (!events) {
+        return next(ApiError.NotFound());
+      } else return res.json(events);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getEventsByUserId(req, res, next) {
+    try {
+      const events = await new EventsService().getEventsByUserId(req.user.id);
+      if (!events) {
+        return next(ApiError.NotFound());
+      } else return res.json(events);
     } catch (error) {
       next(error);
     }
@@ -52,9 +86,9 @@ export default class EventsController {
     }
   }
 
-  async subscribe(req, res, next) {
+  async subscribeToEvent(req, res, next) {
     try {
-      const data = await new EventsService().subscribe(
+      const data = await new EventsService().subscribeToEvent(
         req.body.id,
         req.user.id
       );

@@ -1,7 +1,6 @@
-import db from "../db.js";
-import User from "./User.js";
+import { db } from "./index.js";
+
 import { DataTypes } from "sequelize";
-import UserEvent from "./UserEvent.js";
 
 const Event = db.define(
   "events",
@@ -13,33 +12,32 @@ const Event = db.define(
       unique: true,
       allowNull: false,
     },
-    poster: {
+    posterUrl: {
       type: DataTypes.STRING,
-      allowNull: false,
     },
     title: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    text: {
+    description: {
       type: DataTypes.STRING,
-      allowNull: false,
+      // allowNull: false,
     },
-    date: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
-    time: {
-      type: DataTypes.TIME,
-      allowNull: false,
-    },
+    // date: {
+    //   type: DataTypes.DATE,
+    //   allowNull: false,
+    // },
+    // time: {
+    //   type: DataTypes.TIME,
+    //   allowNull: false,
+    // },
     place: {
       type: DataTypes.STRING,
-      allowNull: false,
+      // allowNull: false,
     },
     price: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      // allowNull: false,
     },
 
     photos: {
@@ -49,12 +47,9 @@ const Event = db.define(
   {}
 );
 
-Event.associations = () => {
-  Event.belongsToMany(User, {
-    through: UserEvent,
-    // as: "user_events",
-    foreignKey: "eventId",
-  });
+Event.associate = (models) => {
+  Event.belongsTo(models.Category, { foreignKey: "categoryId" });
+  Event.belongsToMany(models.User, { through: "user_events" });
+  Event.belongsToMany(models.Artist, { through: "artist_events" });
 };
-
 export default Event;

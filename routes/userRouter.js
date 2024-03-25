@@ -4,7 +4,6 @@ import express from "express";
 import { check } from "express-validator";
 
 import UserController from "../controllers/userController.js";
-import authMiddleware from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
@@ -31,6 +30,10 @@ router.post(
     return await new UserController().registration(req, res, next);
   }
 );
+
+router.get("/getAll", async (req, res, next) => {
+  return await new UserController().getAll(req, res, next);
+});
 
 router.post("/logout", async (req, res, next) => {
   return await new UserController().logout(req, res, next);

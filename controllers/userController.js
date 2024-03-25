@@ -37,17 +37,8 @@ export default class UserController {
   async login(req, res, next) {
     try {
       const { email, password } = req.body;
-      const userData = await new UserService().login(email, password);
-      res.cookie("token", userData.refreshToken, {
-        httpOnly: true,
-        sameSite: "none",
-        secure: true,
-        maxAge: 30 * 24 * 60 * 60 * 1000,
-      });
-      const data = {
-        user: userData.user,
-        accessToken: userData.accessToken,
-      };
+      const data = await new UserService().login(email, password);
+
       return res.status(200).json({ message: "Вход выполнен", data });
     } catch (error) {
       next(error);
@@ -93,5 +84,16 @@ export default class UserController {
       accessToken: userData.accessToken,
     };
     return res.status(200).json({ data });
+  }
+
+  async getAll(req, res, next) {
+    try {
+      const users = await new UserService().getAll();
+      if (!users) {
+        return next(ApiError.NotFound());
+      } else return res.json(users);
+    } catch (error) {
+      next(error);
+    }
   }
 }

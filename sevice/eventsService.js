@@ -1,76 +1,176 @@
 import Event from "../models/Event.js";
 import User from "../models/User.js";
+import Artist from "../models/Artist.js";
+import Category from "../models/Category.js";
+import db from "../db.js";
+import { Op } from "sequelize";
 // import ApiError from "../exceptions/apiErrors.js";
 
 export default class EventsService {
   async getAll() {
     const events = await Event.findAll({
-      include: User,
+      include: [
+        {
+          model: User,
+          attributes: ["id", "name", "email"],
+        },
+        {
+          model: Artist,
+          attributes: ["id", "name", "surname", "nickname", "city"],
+        },
+        {
+          model: Category,
+          attributes: ["id", "name"],
+        },
+      ],
     });
     return events;
   }
 
-  async get(id) {
+  async getEventsBySearch(search) {
+    const events = await Event.findAll({
+      include: [
+        {
+          model: User,
+          attributes: ["id", "name", "email"],
+        },
+        {
+          model: Artist,
+          attributes: ["id", "name", "surname", "nickname", "city"],
+        },
+        {
+          model: Category,
+          attributes: ["id", "name"],
+        },
+      ],
+      where: {
+        title: {
+          [Op.like]: `%${search}%`,
+        },
+      },
+    });
+    return events;
+  }
+
+  async getById(id) {
     const event = await Event.findOne({
       where: {
         id,
       },
+      include: [
+        {
+          model: User,
+          attributes: ["id", "name", "email"],
+        },
+        {
+          model: Artist,
+          attributes: ["id", "name", "surname", "nickname", "city"],
+        },
+        {
+          model: Category,
+          attributes: ["id", "name"],
+        },
+      ],
     });
     return event;
   }
 
+  async getEventsByUserId(userId) {
+    const user = await User.findByPk(userId);
+
+    if (user) {
+      const events = await user.getEvents();
+      return events;
+    } else {
+      throw new Error("User not found");
+    }
+  }
+
+  async getByTitle(title) {
+    const events = await Event.findAll({
+      where: {
+        title: {
+          [Op.startsWith]: title,
+        },
+      },
+      include: [
+        {
+          model: User,
+          attributes: ["id", "name", "email"],
+        },
+        {
+          model: Artist,
+          attributes: ["id", "name", "surname", "nickname", "city"],
+        },
+      ],
+    });
+    return events;
+  }
+
   async add({
     title,
-    poster,
-    text,
+    posterUrl,
+    description,
     date,
     time,
     photos,
     place,
-    tags,
     price,
     artists,
+    category,
   }) {
     const event = await Event.create({
       title,
-      poster,
-      text,
+      posterUrl,
+      description,
       date,
       time,
       place,
       photos,
-      tags,
       price,
-      artists,
     });
+    if (artists) {
+      for (const artist of artists) {
+        const [foundArtist, created] = await Artist.findOrCreate({
+          where: { nickname: artist.nickname },
+          defaults: artist,
+        });
 
+        await event.addArtist(foundArtist);
+      }
+    }
+
+    if (category) {
+      const foundCategory = await Category.findByPk(category.id);
+      await foundCategory.addEvent(event);
+    }
     return { event };
   }
 
   async edit({
+    id,
     title,
-    poster,
-    text,
+    posterUrl,
+    description,
     date,
     time,
     photos,
     place,
-    tags,
     price,
-    id,
     artists,
+    category,
   }) {
-    const event = await Event.update(
+    const event = await Event.findByPk(id);
+    await event.update(
       {
         title,
-        poster,
-        text,
+        posterUrl,
+        description,
         date,
         time,
         place,
         photos,
         price,
-        tags,
         artists,
       },
       {
@@ -80,10 +180,26 @@ export default class EventsService {
       }
     );
 
+    for (const artist of artists) {
+      const [foundArtist, created] = await Artist.findOrCreate({
+        where: { nickname: artist.nickname },
+        defaults: artist,
+      });
+
+      await event.addArtist(foundArtist);
+    }
+
+    if (category) {
+      const foundCategory = await Category.findByPk(category.id);
+      await foundCategory.addEvent(event);
+    }
+
     return { event };
   }
 
   async delete(id) {
+    await db.query(`DELETE FROM user_events WHERE eventId = ${id}`);
+
     const event = await Event.destroy({
       where: {
         id,
@@ -93,5 +209,10 @@ export default class EventsService {
     return { event };
   }
 
-  async subscribe(eventId, userId) {}
+  async subscribeToEvent(eventId, userId) {
+    const user = await User.findByPk(userId);
+    const event = await Event.findByPk(eventId);
+
+    await user.addEvent(event);
+  }
 }

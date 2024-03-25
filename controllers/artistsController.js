@@ -15,12 +15,38 @@ export default class ArtistsController {
     }
   }
 
-  async get(req, res, next) {
+  async getById(req, res, next) {
     try {
-      const artist = await new ArtistsService().get(req.params.id);
+      const artist = await new ArtistsService().getById(req.params.id);
       if (!artist) {
         return next(ApiError.NotFound());
       } else return res.json(artist);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getArtistsByUserId(req, res, next) {
+    try {
+      const artists = await new ArtistsService().getArtistsByUserId(
+        req.user.id
+      );
+      if (!artists) {
+        return next(ApiError.NotFound());
+      } else return res.json(artists);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async getArtistsByEventId(req, res, next) {
+    try {
+      const artists = await new ArtistsService().getArtistsByEventId(
+        req.query.id
+      );
+      if (!artists) {
+        return next(ApiError.NotFound());
+      } else return res.json(artists);
     } catch (error) {
       next(error);
     }
@@ -54,9 +80,9 @@ export default class ArtistsController {
     }
   }
 
-  async subscribe(req, res, next) {
+  async subscribeToArtist(req, res, next) {
     try {
-      const data = await new ArtistsService().subscribe(
+      const data = await new ArtistsService().subscribeToArtist(
         req.body.id,
         req.user.id
       );

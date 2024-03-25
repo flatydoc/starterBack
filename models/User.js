@@ -1,7 +1,6 @@
-import db from "../db.js";
-import Event from "./Event.js";
+import { db } from "./index.js";
+
 import { DataTypes } from "sequelize";
-import UserEvent from "./UserEvent.js";
 
 const User = db.define(
   "users",
@@ -42,12 +41,9 @@ const User = db.define(
   {}
 );
 
-User.associations = () => {
-  User.belongsToMany(Event, {
-    through: UserEvent,
-    // as: "user_events",
-    foreignKey: "userId",
-  });
+User.associate = (models) => {
+  User.belongsToMany(models.Event, { through: "user_events" });
+  User.belongsToMany(models.Artist, { through: "user_artists" });
 };
 
 export default User;

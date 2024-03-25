@@ -47,17 +47,12 @@ export default class UserService {
         `Пользователь с почтовым адресом ${email} не найден`
       );
     }
-
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       throw ApiError.BadRequest(`Неверный пароль`);
     }
-
     const userDto = new UserDto(user);
-    const tokens = new TokenService().generateTokens({ ...userDto });
-
-    await new TokenService().saveToken(userDto.id, tokens.refreshToken);
-    return { ...tokens, user: userDto };
+    return { user: userDto };
   }
 
   async activate(activationLink) {
@@ -104,5 +99,10 @@ export default class UserService {
 
     await new TokenService().saveToken(userDto.id, tokens.refreshToken);
     return { ...tokens, user: userDto };
+  }
+
+  async getAll() {
+    const users = await User.findAll({});
+    return users;
   }
 }
